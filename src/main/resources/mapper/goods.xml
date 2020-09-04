@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.seckill.dao.GoodsDao">
+    <select id="findById" parameterType="long" resultType="com.example.seckill.entity.Goods">
+        select id, title, images, price, indexes, own_spec from tb_sku where id = #{value}
+    </select>
+
+    <select id="findAll" resultType="com.example.seckill.entity.Goods">
+        select id, title, images, price, indexes, own_spec from tb_sku
+    </select>
+</mapper>
