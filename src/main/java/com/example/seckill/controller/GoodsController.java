@@ -1,6 +1,6 @@
 package com.example.seckill.controller;
 
-import com.example.seckill.entity.Goods;
+import com.example.seckill.entity.SecGoods;
 import com.example.seckill.service.GoodsService;
 import com.example.seckill.util.SecResult;
 import org.springframework.stereotype.Controller;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.List;
+
 
 @Controller
 public class GoodsController {
@@ -19,11 +19,8 @@ public class GoodsController {
 
     @RequestMapping("/goods")
     @ResponseBody
-    public Goods getGoodsById(Long gid) {
-//        ModelAndView modelAndView = new ModelAndView("createOrderPage");
-        Goods goods = goodsService.getGoods(gid);
-//        return modelAndView;
-        return goods;
+    public SecResult getGoodsById(Long gid) {
+        return SecResult.ok(goodsService.getGoods(gid));
     }
 
     @RequestMapping("/getGoodsList")
@@ -32,9 +29,29 @@ public class GoodsController {
         return SecResult.ok(goodsService.getGoodsList());
     }
 
-    @RequestMapping("/page")
-    public ModelAndView moveToPage() {
-        ModelAndView modelAndView = new ModelAndView("stockListPage");
+    @RequestMapping("/homepage")
+    public ModelAndView moveToHomePage() {
+        ModelAndView modelAndView = new ModelAndView("/stockListPage");
         return modelAndView;
     }
+
+    @RequestMapping("/stockDetailPage")
+    public ModelAndView moveToSinglePage(Long sku_id) {
+        ModelAndView modelAndView = new ModelAndView("/stockDetailPage");
+        return modelAndView;
+    }
+
+    @RequestMapping("/getSecGoodsList")
+    @ResponseBody
+    public SecResult getSecGoodsList() {
+        return SecResult.ok(goodsService.getSecGoodsList());
+    }
+
+    @RequestMapping("/sec_goods")
+    @ResponseBody
+    public SecResult getSecGoodsById(Long gid) {
+        SecGoods secGoods = goodsService.getSecGoods(gid);
+        return SecResult.ok(secGoods);
+    }
+
 }

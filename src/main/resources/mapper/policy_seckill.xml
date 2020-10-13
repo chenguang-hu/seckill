@@ -6,6 +6,10 @@
         SELECT * FROM tb_limit_policy WHERE NOW() BETWEEN begin_time AND end_time AND STATUS = 0;
     </select>
 
+    <select id="findExpireSeckill" resultType="com.example.seckill.entity.Policy">
+        SELECT * FROM tb_limit_policy WHERE NOW() > end_time AND STATUS = 1;
+    </select>
+
     <select id="findById" parameterType="long" resultType="com.example.seckill.entity.Policy">
         SELECT * FROM tb_limit_policy WHERE id = #{value}
     </select>
@@ -13,4 +17,5 @@
     <update id="update" parameterType="com.example.seckill.entity.Policy">
         UPDATE tb_limit_policy SET sku_id = #{sku_id}, quantity = #{quantity}, price = #{price}, begin_time = #{begin_time}, end_time = #{end_time}, status = #{status} WHERE id = #{id}
     </update>
+
 </mapper>

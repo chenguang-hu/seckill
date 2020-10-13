@@ -40,8 +40,22 @@ spring:
         # jedis最大等待时间，超过此值会提示连接超时异常
         max-wait: 10000ms
 
+  rabbitmq:
+    host: 192.168.59.128
+    port: 5672
+    username: admin
+    password: 12345
+    virtual-host: /
+    listener:
+      simple:
+        # 定义消费者最多同时处理10个消息, 一次只能从mq中取10个
+        prefetch: 10
+        # 消息需要手动确认
+        acknowledge-mode: manual
+
   thymeleaf:
     prefix: classpath:/templates/
+
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

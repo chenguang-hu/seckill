@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.seckill.dao.SecGoodsDao">
+
+    <!-- 自定义映射 -->
+    <resultMap id="secGoodsResult" type="com.example.seckill.entity.SecGoods">
+        <!-- 主键映射 -->
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="images" column="images"/>
+        <result property="price" column="price"/>
+        <result property="indexes" column="indexes"/>
+        <result property="own_spec" column="own_spec"/>
+
+        <!-- 给SecGoods中的属性policy赋值 -->
+        <association property="policy" javaType="com.example.seckill.entity.Policy">
+            <id column="pid" property="id"/>
+            <result property="price" column="sec_price"/>
+            <result property="begin_time" column="begin_time"/>
+            <result property="end_time" column="end_time"/>
+        </association>
+    </resultMap>
+
+    <select id="findSecGoods" resultMap="secGoodsResult">
+        SELECT
+          tb_sku.id,
+          tb_sku.title,
+          tb_sku.images,
+          tb_sku.price,
+          tb_sku.indexes,
+          tb_sku.own_spec,
+          tb_limit_policy.id pid,
+          tb_limit_policy.price sec_price,
+          tb_limit_policy.begin_time,
+          tb_limit_policy.end_time
+        FROM tb_sku
+          LEFT JOIN tb_limit_policy
+            ON tb_limit_policy.sku_id = tb_sku.id
+              AND NOW()BETWEEN tb_limit_policy.begin_time
+              AND tb_limit_policy.end_time
+    </select>
+
+    <select id="findSecGoodsByid" parameterType="long" resultMap="secGoodsResult">
+        SELECT
+          tb_sku.id,
+          tb_sku.title,
+          tb_sku.images,
+          tb_sku.price,
+          tb_sku.indexes,
+          tb_sku.own_spec,
+          tb_limit_policy.id pid,
+          tb_limit_policy.price sec_price,
+          tb_limit_policy.begin_time,
+          tb_limit_policy.end_time
+        FROM tb_sku
+          LEFT JOIN tb_limit_policy
+            ON tb_limit_policy.sku_id = tb_sku.id
+              AND NOW()BETWEEN tb_limit_policy.begin_time
+              AND tb_limit_policy.end_time
+              WHERE tb_sku.id = #{value}
+    </select>
+
+</mapper>

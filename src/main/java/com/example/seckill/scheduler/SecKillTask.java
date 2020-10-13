@@ -40,4 +40,16 @@ public class SecKillTask {
         }
 
     }
+
+    @Scheduled(cron = "0/5 * * * * ?")
+    public void endSecKill() {
+        List<Policy> expireSeckill = policyDao.findExpireSeckill();
+        for (Policy policy:expireSeckill) {
+            System.out.println(policy.getId()+"秒杀活动已结束");
+            policy.setStatus(2);
+            policyDao.update(policy);
+            // 删除redis中库存计数器
+            redisTemplate.delete("seckill:count:" + policy.getId());
+        }
+    }
 }

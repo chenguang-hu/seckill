@@ -20,16 +20,4 @@ public class SeckillApplication {
         SpringApplication.run(SeckillApplication.class, args);
     }
 
-    // 修改默认的RedisTemplate持久化方式
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        // 设置value值序列化方式为JSON
-        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-        // 设置key值序列化方式为String
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        return redisTemplate;
-    }
 }

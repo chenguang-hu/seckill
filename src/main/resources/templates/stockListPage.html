@@ -14,7 +14,7 @@
         function getStockList() {
             $.ajax({
                 type: 'post',
-                url: "/getGoodsList",
+                url: "/getSecGoodsList",
                 success: function (data) {
                     if (data.data) {
                         $(data.data).each(function (n,value) {
@@ -26,19 +26,21 @@
                             stockDetailClone.find(".stockImage").attr("src",value.images);
                             stockDetailClone.find(".stockName").html(value.title);
                             //秒杀价格
-                            var limitPrice = value.limitPrice;
+
+                            var limitPrice = value.policy.price;
                             var newStockPrice = value.price;
                             //存在秒杀政策
                             if (limitPrice){
-                                stockDetailClone.find(".oldStockPrice").html("￥"+parseInt(value.price)/100);
+                                stockDetailClone.find(".oldStockPrice").html("￥"+parseInt(value.price));
                                 newStockPrice = limitPrice;
-                                lasttime(value.limitEndTime,stockDetailClone);
+                                lasttime(value.policy.end_time,stockDetailClone);
                             }else {
                                 stockDetailClone.find(".oldStockPrice").remove();
                                 stockDetailClone.find(".time").html("");
                             }
-                            stockDetailClone.find(".newStockPrice").html(parseInt(newStockPrice)/100);
-                            stockDetailClone.attr("sku_id",value.sku_id);
+                            stockDetailClone.find(".newStockPrice").html(parseInt(newStockPrice));
+                            stockDetailClone.attr("sku_id",value.id);
+
                             $("#stockList").append(stockDetailClone);
                         })
                     }
@@ -58,7 +60,7 @@
                 alert("商品ID=[" + sku_id + "]");
             }
             //跳转商品详情页
-            open("stockDetailPage.html?sku_id=" + sku_id);
+            open("stockDetailPage?sku_id=" + sku_id);
         }
 
         //初始化活动剩余时间

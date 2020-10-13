@@ -9,36 +9,36 @@
     <script type="text/javascript">
         $(function () {
             getStockDetail();
-        })
+        });
         function getStockDetail() {
             var sku_id = getQueryVariable("sku_id");
             $("#payAmount").attr("sku_id",sku_id);
             $.ajax({
                 type:'post',
                 timeout : 10000, //超时时间设置，单位毫秒
-                url:"/leyouStock/getStock/"+sku_id,
+                url:"/sec_goods?gid="+sku_id,
                 success:function(data){
 
                     var stockPrice = 0;
                     //秒杀价格
                     var limitPrice = 0;
-                    $(data.sku).each(function (n,value) {
+                    $(data.data).each(function (n,value) {
                         $("title").html(value.title);
                         $("#stockName").html(value.title);
                         $("#stockImage").attr("src",value.images);
                         stockPrice = value.price;
-                        limitPrice = value.limitPrice;
+                        limitPrice = value.policy.price;
                     });
 
                     //存在秒杀政策
                     if (limitPrice){
-                        $(".totalPrice").html(parseInt(stockPrice)/100);
+                        $(".totalPrice").html(parseInt(stockPrice));
                         stockPrice = limitPrice;
                     }else {
-                        $(".totalPrice").html(parseInt(stockPrice)/100);
-                        $(".payAmount").html(parseInt(stockPrice)/100);
+                        $(".totalPrice").html(parseInt(stockPrice));
+                        $(".payAmount").html(parseInt(stockPrice));
                     }
-                    $(".payPrice").html(parseInt(stockPrice)/100);
+                    $(".payPrice").html(parseInt(stockPrice));
                 },error:function(){
                     alert("请求出错，请稍后重试");
                 }
@@ -86,7 +86,7 @@
     </script>
 </head>
 <body>
-    <div><img src="/img/leyouOrder.png" style="width: 100%"></div>
+    <!----><div><img src="/img/leyouOrder.png" style="width: 100%"></div>
     <div style="padding: 10px 550px 10px;">
         <div id="stockAll" class="input-group" style="margin-bottom: 20px;">
             <div id="stockDetail">

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.seckill.dao.OrderDao">
+    <insert id="insert" parameterType="com.example.seckill.entity.Order">
+        INSERT INTO tb_order(order_no, order_status, user_id, recv_name, recv_address, recv_mobile, postage, amount, create_time) VALUE (#{order_no}, #{order_status}, #{user_id}, #{recv_name}, #{recv_address}, #{recv_mobile}, #{postage}, #{amount}, #{create_time})
+        <selectKey resultType="Long" keyProperty="order_id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+    </insert>
+
+    <select id="findByOrderNo" parameterType="java.lang.String" resultType="com.example.seckill.entity.Order">
+        select * from tb_order where order_no = #{value}
+    </select>
+</mapper>

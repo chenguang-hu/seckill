@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/7.28.5/sweetalert2.all.js"></script>
     <script type="text/javascript">
         $(function () {
             getStock();
@@ -16,26 +17,26 @@
             $("#goShopping").attr("sku_id", sku_id);
             $.ajax({
                 type: 'post',
-                url: "/leyouStock/getStock/" + sku_id,
+                url: "/sec_goods?gid=" + sku_id,
                 success: function (data) {
 
                     var stockPrice = 0;
                     //秒杀价格
                     var limitPrice = 0;
                     var endTime = "";
-                    $(data.sku).each(function (n, value) {
+                    $(data.data).each(function (n, value) {
                         $("title").html(value.title);
                         $("#stockName").html(value.title);
                         $("#stockImage").attr("src", value.images);
                         $("#stockDesc").html(value.description);
                         stockPrice = value.price;
-                        limitPrice = value.limitPrice;
-                        endTime = value.limitEndTime;
+                        limitPrice = value.policy.price;
+                        endTime = value.policy.end_time;
                     })
 
-                    //存在秒杀政策
+                    // 存在秒杀政策
                     if (limitPrice) {
-                        $(".oldStockPrice").html("￥" + parseInt(stockPrice) / 100);
+                        $(".oldStockPrice").html("￥" + parseInt(stockPrice));
                         stockPrice = limitPrice;
                         lasttime(endTime, $("#time"));
                     } else {
@@ -46,7 +47,7 @@
                         $("#goShopping").css("background-color", "#777777")
                         $("#goShopping").html("即将开始");
                     }
-                    $(".newStockPrice").html(parseInt(stockPrice) / 100);
+                    $(".newStockPrice").html(parseInt(stockPrice));
                 }, error: function () {
                     alert("请求出错，请稍后重试");
                 }
@@ -60,13 +61,31 @@
         function goShopping(obj) {
             var sku_id = $(obj).attr("sku_id");
             if (!sku_id) {
-                alert("商品ID=【" + sku_id + "】;");
+                alert("商品ID=[" + sku_id + "];");
             }
-            //跳转提交订单页面
-            open("createOrderPage.html?sku_id=" + sku_id);
+            // 跳转提交订单页面
+            // open("createOrderPage.html?sku_id=" + sku_id);
+            $.getJSON("/seckill?id=1&user_id=u0010", function (json) {
+                if (json.code == "0") {
+                    alert("恭喜您, 得到抢购资格, 快去下单吧");
+                    var orderNo = json.data.orderNo;
+                    console.log(orderNo);
+                    swal({
+                        title: "正在创建订单, 请稍后...",
+                        timer: 2000,
+                        showConfirmButton: false,
+                        type: "info"
+                    }).then(function () {
+                        window.location.href = "/checkorder?orderNo=" + orderNo + "&sku_id=" + sku_id;
+                        alert("触发成功");
+                    })
+                } else {
+                    alert(json.msg);
+                }
+            })
         }
 
-        //初始化活动剩余时间
+        // 初始化活动剩余时间
         function lasttime(limitPriceTime, htmlObj) {
             var stopTime = (new Date(limitPriceTime).getTime() - new Date().getTime()) / 1000;//秒杀结束时间
             setInterval(function () {

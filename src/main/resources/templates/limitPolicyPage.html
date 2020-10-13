@@ -63,7 +63,7 @@
         //商品选择，动态显示商品原价
         function stockChange() {
             var sku_id = $("#sku_id").val();
-            $("#oldPrice").val(parseFloat($("option[value="+sku_id+"]").attr("oldPrice"))/100);
+            $("#oldPrice").val(parseFloat($("option[value="+sku_id+"]").attr("oldPrice")));
         }
 
         $(function () {

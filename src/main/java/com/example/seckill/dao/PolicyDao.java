@@ -9,6 +9,8 @@ import java.util.List;
 public interface PolicyDao {
     List<Policy> findUnStartSeckill();
 
+    List<Policy> findExpireSeckill();
+
     void update(Policy policy);
 
     Policy findById(long id);
